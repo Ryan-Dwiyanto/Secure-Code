@@ -5,6 +5,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DemoBladeController;
 use App\Http\Controllers\XSSLabController;
+use App\Http\Middleware\SecurityHeaders;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +113,7 @@ Route::prefix('xss-lab')->name('xss-lab.')->group(function () {
 
 //Task
 Route::get('/vulnerable/search', [XSSLabController::class, 'searchVulnerable']);
-Route::post('/secure/comment', [XSSLabController::class, 'storeComment']);
+Route::post('/secure/comment', [XSSLabController::class, 'storeComment'])->middleware(SecurityHeaders::class);
+;
 Route::get('/secure/comment', [XSSLabController::class, 'commentForm']);
 
