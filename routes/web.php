@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DemoBladeController;
+use App\Http\Controllers\XSSLabController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,3 +64,54 @@ Route::resource('tickets', TicketController::class);
 // Route::get('/tickets/{ticket}/edit', [TicketController::class, 'edit'])->name('tickets.edit');
 // Route::put('/tickets/{ticket}', [TicketController::class, 'update'])->name('tickets.update');
 // Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
+
+
+// =========================================
+// DEMO BLADE TEMPLATING
+// =========================================
+Route::prefix('demo-blade')->name('demo-blade.')->group(function () {
+    Route::get('/', [DemoBladeController::class, 'index'])->name('index');
+    Route::get('/directives', [DemoBladeController::class, 'directives'])->name('directives');
+    Route::get('/components', [DemoBladeController::class, 'components'])->name('components');
+    Route::get('/includes', [DemoBladeController::class, 'includes'])->name('includes');
+    Route::get('/stacks', [DemoBladeController::class, 'stacks'])->name('stacks');
+});
+
+// =========================================
+// XSS LAB - VULNERABLE & SECURE
+// =========================================
+Route::prefix('xss-lab')->name('xss-lab.')->group(function () {
+    Route::get('/', [XSSLabController::class, 'index'])->name('index');
+    
+    // Reset comments untuk demo ulang
+    Route::post('/reset-comments', [XSSLabController::class, 'resetComments'])->name('reset-comments');
+    
+    // Reflected XSS
+    Route::get('/reflected/vulnerable', [XSSLabController::class, 'reflectedVulnerable'])
+        ->name('reflected.vulnerable');
+    Route::get('/reflected/secure', [XSSLabController::class, 'reflectedSecure'])
+        ->name('reflected.secure');
+    
+    // Stored XSS
+    Route::get('/stored/vulnerable', [XSSLabController::class, 'storedVulnerable'])
+        ->name('stored.vulnerable');
+    Route::post('/stored/vulnerable', [XSSLabController::class, 'storedVulnerableStore'])
+        ->name('stored.vulnerable.store');
+    
+    Route::get('/stored/secure', [XSSLabController::class, 'storedSecure'])
+        ->name('stored.secure');
+    Route::post('/stored/secure', [XSSLabController::class, 'storedSecureStore'])
+        ->name('stored.secure.store');
+    
+    // DOM-Based XSS
+    Route::get('/dom/vulnerable', [XSSLabController::class, 'domVulnerable'])
+        ->name('dom.vulnerable');
+    Route::get('/dom/secure', [XSSLabController::class, 'domSecure'])
+        ->name('dom.secure');
+});
+
+//Task
+Route::get('/vulnerable/search', [XSSLabController::class, 'searchVulnerable']);
+Route::post('/secure/comment', [XSSLabController::class, 'storeComment']);
+Route::get('/secure/comment', [XSSLabController::class, 'commentForm']);
+
