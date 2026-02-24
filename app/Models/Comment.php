@@ -18,7 +18,7 @@ class Comment extends Model
 
     protected $fillable = [
         'ticket_id',
-        'author_name',
+        'user_id',
         'content',
     ];
 
@@ -28,5 +28,13 @@ class Comment extends Model
     public function ticket(): BelongsTo
     {
         return $this->belongsTo(Ticket::class);
+    }
+
+    /**
+     * Relasi: Comment belongs to User
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
